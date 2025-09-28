@@ -1,23 +1,37 @@
 {% extends "base.html" %}
 {% block title %}Inicio — Hotel Pacific Reef{% endblock %}
 {% block content %}
-  <section class="hero">
-    <h1>Bienvenidos al Hotel Pacific Reef</h1>
-    <p>El mejor lugar para disfrutar y descansar.</p>
-    <a class="btn" href="#">Ver todas las habitaciones</a>
-  </section>
 
-  <section class="panel">
-    <h2>Consulte disponibilidad</h2>
-    <form method="get" action="#">
-      <label>Fecha de entrada <input type="date" name="check_in" required></label>
-      <label>Fecha de salida <input type="date" name="check_out" required></label>
-      <label>Huéspedes
-        <select name="guests" required>
-          <option>1</option><option>2</option><option>3</option><option>4</option>
-        </select>
-      </label>
-      <button class="btn" type="submit">Consultar</button>
-    </form>
-  </section>
+<section class="hero full-bleed">
+  <div class="hero__bg"></div>
+  <div class="container hero__grid">
+    <div class="hero__welcome">
+      <h1 class="hero__title">Bienvenidos al Hotel <span>Pacific Reef</span></h1>
+      <p class="hero__text">El mejor lugar para disfrutar y descansar junto a su familia y amigos.</p>
+      <a class="btn btn--primary" href="#">Ver todas las habitaciones</a>
+    </div>
+
+    <div class="glass card">
+      <h2 class="card__title">Consulte disponibilidad</h2>
+      <form method="get" action="#" class="form">
+        <label class="field">
+          <span class="label">Fecha de entrada</span>
+          <input type="date" name="check_in" class="input" required>
+        </label>
+        <label class="field">
+          <span class="label">Fecha de salida</span>
+          <input type="date" name="check_out" class="input" required>
+        </label>
+        <label class="field">
+          <span class="label">Huéspedes</span>
+          <select name="guests" class="input" required>
+            <option>1</option><option>2</option><option>3</option><option>4</option>
+          </select>
+        </label>
+        <button class="btn btn--ghost" type="submit">Consultar</button>
+      </form>
+    </div>
+  </div>
+</section>
+
 {% endblock %}
