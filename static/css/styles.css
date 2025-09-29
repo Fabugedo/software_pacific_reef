@@ -107,3 +107,7 @@ h1{font-family:"Playfair Display", Georgia, serif}
   border-top:1px solid #2a2a2a;
   display:flex;align-items:center;justify-content:center;
 }
+main{
+  min-height: calc(100vh - var(--topbar-h) - var(--footer-h));
+  display: block;
+}
