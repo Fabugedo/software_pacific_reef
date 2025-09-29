@@ -22,11 +22,19 @@ class Room(models.Model):
 
 
 class RoomImage(models.Model):
-    room = models.ForeignKey(Room, on_delete=models.CASCADE)
-    image_url = models.URLField()
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name="images")
+    image = models.ImageField(upload_to="rooms/", blank=True, null=True)
+    image_url = models.URLField(blank=True, null=True)
 
     def __str__(self):
         return f"Imagen de {self.room.name}"
+
+    def src(self):
+
+        if self.image:
+            return self.image.url
+        return self.image_url or ""
+
 
 
 class Reservation(models.Model):
