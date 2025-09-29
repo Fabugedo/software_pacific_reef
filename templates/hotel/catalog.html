@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Catálogo — Hotel Pacific Reef{% endblock %}
+{% block content %}
+<div class="container" style="padding:28px 0">
+  <h2 style="margin-bottom:16px">Lista de habitaciones</h2>
+
+  {% if error %}
+    <p style="color:#b00020">{{ error }}</p>
+  {% endif %}
+
+  {% if rooms %}
+    <div style="display:grid;gap:14px">
+      {% for r in rooms %}
+        <div class="card" style="background:#fff;padding:16px;border-radius:12px;display:flex;gap:16px;align-items:center">
+          {% with img=r.roomimage_set.first %}
+            {% if img %}
+              <img src="{{ img.image_url }}" alt="" style="width:140px;height:90px;object-fit:cover;border-radius:10px">
+            {% endif %}
+          {% endwith %}
+          <div style="flex:1">
+            <div style="font-weight:700">{{ r.name }}</div>
+            <div style="color:#6d6d6d;font-size:14px">{{ r.description|default:"" }}</div>
+            <div style="margin-top:6px">Precio: ${{ r.price_per_night }} CLP / noche</div>
+          </div>
+          <a class="btn btn--primary" href="{% url 'room_detail' r.id %}?check_in={{ check_in }}&check_out={{ check_out }}&guests={{ guests }}">Seleccionar</a>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    {% if not error %}
+      <p>No hay habitaciones disponibles para ese rango y cantidad de huéspedes.</p>
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Detalle — {{ room.name }}{% endblock %}
+{% block content %}
+<div class="container" style="padding:28px 0;display:grid;gap:20px;grid-template-columns:1.1fr .9fr">
+  <div class="card" style="background:#fff;padding:16px;border-radius:12px">
+    {% for img in images %}
+      <img src="{{ img.image_url }}" alt="" style="width:100%;border-radius:12px;object-fit:cover;margin-bottom:10px">
+    {% empty %}
+      <div style="height:240px;background:#ddd;border-radius:12px"></div>
+    {% endfor %}
+    <h2 style="margin-top:6px">{{ room.name }}</h2>
+    <p>{{ room.description }}</p>
+  </div>
+
+  <div class="card glass">
+    <h3 class="card__title">Detalles</h3>
+    <ul style="list-style:none;padding:0;margin:12px 0">
+      <li>Fecha de Entrada: <b>{{ check_in }}</b></li>
+      <li>Fecha de Salida: <b>{{ check_out }}</b></li>
+      <li>Huéspedes: <b>{{ guests }}</b></li>
+      <li>Noches: <b>{{ nights }}</b></li>
+      <li>Precio por noche: <b>${{ room.price_per_night }}</b></li>
+      <li>Precio Total: <b>${{ total }}</b></li>
+    </ul>
+
+    <form method="post" action="{% url 'reserve' room.id %}?check_in={{ check_in }}&check_out={{ check_out }}&guests={{ guests }}">
+      {% csrf_token %}
+      <div class="field"><span class="label">Nombre completo</span>{{ form.holder_name }}</div>
+      <div class="field"><span class="label">Email</span>{{ form.holder_email }}</div>
+      <button class="btn btn--primary" style="margin-top:12px" type="submit">Reservar</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

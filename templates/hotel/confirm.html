@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Confirmación de reserva{% endblock %}
+{% block content %}
+<div class="container" style="padding:36px 0">
+  <div class="card" style="background:#fff;padding:22px;border-radius:12px">
+    <h2>¡Reserva confirmada!</h2>
+    <p><b>{{ res.holder_name }}</b>, tu reserva quedó registrada.</p>
+    <ul style="list-style:none;padding:0">
+      <li>Habitación: <b>{{ res.room.name }}</b></li>
+      <li>Entrada: <b>{{ res.check_in }}</b></li>
+      <li>Salida: <b>{{ res.check_out }}</b></li>
+      <li>Huéspedes: <b>{{ res.guests }}</b></li>
+      <li>Total: <b>${{ res.total_amount }}</b></li>
+    </ul>
+    <a class="btn btn--ghost" href="{% url 'home' %}" style="margin-top:10px">Volver al inicio</a>
+  </div>
+</div>
+{% endblock %}
