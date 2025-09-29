@@ -111,3 +111,11 @@ main{
   min-height: calc(100vh - var(--topbar-h) - var(--footer-h));
   display: block;
 }
+.checkout-grid{
+  display:grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap:20px;
+}
+@media (max-width:940px){
+  .checkout-grid{ grid-template-columns:1fr; }
+}

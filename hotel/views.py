@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.http import HttpResponseBadRequest
 from .models import Room, Reservation, RoomImage
-from .forms import SearchForm, ReservationForm
+from .forms import SearchForm, ReservationForm, CheckoutForm
 
 def _parse_dates(request):
     ci = request.GET.get("check_in")
@@ -77,3 +77,57 @@ def reserve(request, room_id):
 def confirmation(request, res_id):
     res = get_object_or_404(Reservation, pk=res_id)
     return render(request, "hotel/confirm.html", {"res": res})
+def checkout(request, room_id):
+    room = get_object_or_404(Room, pk=room_id, is_active=True)
+
+    # Prefill desde querystring (viene del catálogo)
+    ci, co, guests = _parse_dates(request)
+    initial = {}
+    if ci: initial["check_in"] = ci
+    if co: initial["check_out"] = co
+    if guests: initial["guests"] = guests
+
+    error = None
+    if request.method == "POST":
+        form = CheckoutForm(request.POST)
+        if form.is_valid():
+            ci = form.cleaned_data["check_in"]
+            co = form.cleaned_data["check_out"]
+            guests = form.cleaned_data["guests"]
+
+            if ci >= co:
+                error = "Las fechas no son válidas."
+            elif guests > room.capacity:
+                error = "La habitación no soporta esa cantidad de huéspedes."
+            elif not room.is_available(ci, co):
+                error = "La habitación no está disponible en esas fechas."
+            else:
+                nights = (co - ci).days
+                total = nights * room.price_per_night
+                res = Reservation.objects.create(
+                    room=room,
+                    check_in=ci,
+                    check_out=co,
+                    guests=guests,
+                    holder_name=form.cleaned_data["holder_name"],
+                    holder_email=form.cleaned_data["holder_email"],
+                    total_amount=total,
+                )
+                return redirect("confirmation", res_id=res.id)
+        else:
+            error = "Revisa los campos del formulario."
+    else:
+        form = CheckoutForm(initial=initial)
+
+    # acá preparamos el resumen
+    nights = (co - ci).days if (ci and co and ci < co) else 0
+    total = nights * room.price_per_night if nights else 0
+    images = getattr(room, "images", None)
+    if images is None:
+        from .models import RoomImage
+        images = RoomImage.objects.filter(room=room)
+
+    ctx = dict(room=room, images=images, form=form, error=error,
+               check_in=ci, check_out=co, guests=guests or 1,
+               nights=nights, total=total)
+    return render(request, "hotel/checkout.html", ctx)

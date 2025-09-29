@@ -46,6 +46,15 @@ class Reservation(models.Model):
     holder_email = models.EmailField()
     total_amount = models.DecimalField(max_digits=12, decimal_places=0)
     created_at = models.DateTimeField(default=timezone.now)
+    PAYMENT_STATUS = [
+        ("pending", "Pendiente"),
+        ("paid", "Pagado"),
+        ("cancelled", "Cancelada"),
+    ]
+    payment_status = models.CharField(
+        max_length=10, choices=PAYMENT_STATUS, default="pending"
+    )
 
     def __str__(self):
         return f"Reserva {self.room.name} {self.check_in}→{self.check_out}"
+

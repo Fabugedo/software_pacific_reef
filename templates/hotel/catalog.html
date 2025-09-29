@@ -38,9 +38,10 @@
           </div>
 
           <a class="btn btn--primary"
-             href="{% url 'room_detail' r.id %}?check_in={{ check_in }}&check_out={{ check_out }}&guests={{ guests }}">
+             href="{% url 'checkout' r.id %}?check_in={{ check_in }}&check_out={{ check_out }}&guests={{ guests }}">
             Seleccionar
           </a>
+
         </div>
       {% endfor %}
     </div>
