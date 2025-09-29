@@ -16,3 +16,17 @@ class CheckoutForm(forms.Form):
     holder_name = forms.CharField(label="Nombre completo", max_length=120)
     holder_email = forms.EmailField(label="Email")
     nationality = forms.CharField(label="Nacionalidad (opcional)", max_length=60, required=False)
+
+class PaymentForm(forms.Form):
+    method = forms.ChoiceField(
+        label="Método de pago",
+        choices=[("card", "Tarjeta de crédito/débito"), ("transfer", "Transferencia")],
+        widget=forms.RadioSelect,
+    )
+    card_number = forms.CharField(
+        label="N° tarjeta (simulado)",
+        max_length=19,
+        required=False,
+        widget=forms.TextInput(attrs={"placeholder": "4111 1111 1111 1111"}),
+    )
+    accept = forms.BooleanField(label="Acepto términos y condiciones")

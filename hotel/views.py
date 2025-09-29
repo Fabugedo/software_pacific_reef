@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.http import HttpResponseBadRequest
 from .models import Room, Reservation, RoomImage
-from .forms import SearchForm, ReservationForm, CheckoutForm
+from .forms import SearchForm, ReservationForm, CheckoutForm, PaymentForm
 
 def _parse_dates(request):
     ci = request.GET.get("check_in")
@@ -18,7 +18,7 @@ def _parse_dates(request):
     return check_in, check_out, guests
 
 def home(request):
-    # Si viene el form con GET, redirige a catálogo con los parámetros
+
     if {"check_in", "check_out", "guests"} <= set(request.GET.keys()):
         return redirect(f"{reverse('catalog')}?check_in={request.GET['check_in']}&check_out={request.GET['check_out']}&guests={request.GET['guests']}")
     return render(request, "hotel/home.html")
@@ -31,7 +31,7 @@ def catalog(request):
     if not (check_in and check_out and check_in < check_out):
         error = "Ingresa un rango de fechas válido."
     else:
-        # filtra por capacidad y disponibilidad
+
         base_qs = Room.objects.filter(is_active=True, capacity__gte=guests).order_by("price_per_night")
         rooms = [r for r in base_qs if r.is_available(check_in, check_out)]
 
@@ -80,7 +80,7 @@ def confirmation(request, res_id):
 def checkout(request, room_id):
     room = get_object_or_404(Room, pk=room_id, is_active=True)
 
-    # Prefill desde querystring (viene del catálogo)
+
     ci, co, guests = _parse_dates(request)
     initial = {}
     if ci: initial["check_in"] = ci
@@ -131,3 +131,21 @@ def checkout(request, room_id):
                check_in=ci, check_out=co, guests=guests or 1,
                nights=nights, total=total)
     return render(request, "hotel/checkout.html", ctx)
+def payment(request, res_id):
+    res = get_object_or_404(Reservation, pk=res_id)
+    nights = (res.check_out - res.check_in).days
+    total = res.total_amount
+
+    if request.method == "POST":
+        form = PaymentForm(request.POST)
+        if form.is_valid():
+
+            res.payment_status = "paid"
+            res.save()
+            return redirect("confirmation", res_id=res.id)
+    else:
+        form = PaymentForm(initial={"method": "card"})
+
+    return render(request, "hotel/payment.html", {
+        "res": res, "nights": nights, "total": total, "form": form
+    })

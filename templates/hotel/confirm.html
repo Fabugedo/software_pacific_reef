@@ -1,18 +1,33 @@
 {% extends "base.html" %}
-{% block title %}Confirmación de reserva{% endblock %}
+{% block title %}{{ res.payment_status == 'paid'|yesno:"Pago exitoso,Reserva ingresada" }} — Hotel Pacific Reef{% endblock %}
 {% block content %}
 <div class="container" style="padding:36px 0">
-  <div class="card" style="background:#fff;padding:22px;border-radius:12px">
-    <h2>¡Reserva confirmada!</h2>
-    <p><b>{{ res.holder_name }}</b>, tu reserva quedó registrada.</p>
+  <div class="card" style="background:#fff;padding:22px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.12)">
+    {% if res.payment_status == "paid" %}
+      <h2>¡Pago realizado con éxito!</h2>
+      <p>Tu reserva quedó <b>confirmada</b>. Te esperamos 👋</p>
+    {% else %}
+      <h2>¡Reserva ingresada!</h2>
+      <p>
+        <b>{{ res.holder_name }}</b>, tu reserva fue registrada.
+        Para confirmarla, por favor completa el pago.
+      </p>
+    {% endif %}
+
     <ul style="list-style:none;padding:0">
       <li>Habitación: <b>{{ res.room.name }}</b></li>
       <li>Entrada: <b>{{ res.check_in }}</b></li>
       <li>Salida: <b>{{ res.check_out }}</b></li>
       <li>Huéspedes: <b>{{ res.guests }}</b></li>
       <li>Total: <b>${{ res.total_amount }}</b></li>
+      <li>Estado: <b>{{ res.get_payment_status_display }}</b></li>
     </ul>
-    <a class="btn btn--ghost" href="{% url 'home' %}" style="margin-top:10px">Volver al inicio</a>
+
+    {% if res.payment_status == "pending" %}
+      <a class="btn btn--primary" href="{% url 'payment' res.id %}" style="margin-top:12px">Pagar ahora</a>
+    {% else %}
+      <a class="btn btn--ghost" href="{% url 'home' %}" style="margin-top:12px">Volver al inicio</a>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

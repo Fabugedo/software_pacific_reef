@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Pago de reserva — Hotel Pacific Reef{% endblock %}
+{% block content %}
+<div class="container" style="padding:28px 0">
+  <h2 style="margin-bottom:16px">Pago de reserva</h2>
+
+  <div class="checkout-grid">
+    <div class="card glass">
+      <h3 class="card__title">Resumen</h3>
+      <ul style="list-style:none;padding:0;margin:8px 0;color:#444">
+        <li>Habitación: <b>{{ res.room.name }}</b></li>
+        <li>Entrada: <b>{{ res.check_in }}</b></li>
+        <li>Salida: <b>{{ res.check_out }}</b></li>
+        <li>Noches: <b>{{ nights }}</b></li>
+        <li>Total a pagar: <b>${{ total }}</b></li>
+      </ul>
+    </div>
+
+    <div class="card" style="background:#fff;padding:18px;border-radius:12px">
+      <h3 class="card__title">Completar pago (simulado)</h3>
+      <form method="post" style="margin-top:10px">
+        {% csrf_token %}
+        <div class="field">
+          <span class="label">Método de pago</span>
+          {{ form.method }}
+        </div>
+        <div class="field">
+          <span class="label">N° de tarjeta</span>
+          {{ form.card_number }}
+          <small style="color:#777">* Demo: no se valida con pasarela real</small>
+        </div>
+        <div class="field" style="margin-top:6px">
+          {{ form.accept }} <span class="label"> {{ form.accept.label }} </span>
+        </div>
+        <button class="btn btn--primary" style="margin-top:12px">Pagar ${{ total }}</button>
+      </form>
+      <p style="font-size:12px;color:#777;margin-top:10px">
+        * Esta es una simulación para el MVP. En producción se integraría una pasarela (Transbank, MercadoPago, etc.).
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}
