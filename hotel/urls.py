@@ -10,3 +10,4 @@ urlpatterns = [
     path('reservar/<int:room_id>/', views.reserve, name='reserve'),
     path('confirmacion/<int:res_id>/', views.confirmation, name='confirmation'),
 ]
+

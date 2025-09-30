@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Ingresar{% endblock %}
+{% block content %}
+<div class="container" style="padding:28px 0">
+  <div class="card" style="background:#fff;padding:18px;border-radius:12px;max-width:420px;margin:0 auto">
+    <h3 class="card__title">Acceso</h3>
+    <form method="post" style="display:grid;gap:12px;margin-top:12px">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button class="btn btn--primary">Ingresar</button>
+    </form>
+    <p style="color:#777;font-size:12px;margin-top:10px">
+      * Usa tu cuenta staff/superuser (admin) para entrar al panel.
+    </p>
+  </div>
+</div>
+{% endblock %}

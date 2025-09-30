@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Panel de administración{% endblock %}
+{% block content %}
+<div class="container" style="padding:28px 0">
+  <h2>Panel (Staff)</h2>
+  <p style="color:#666">Últimas reservas</p>
+
+  <div class="card" style="background:#fff;padding:16px;border-radius:12px">
+    {% if reservas %}
+      <table style="width:100%;border-collapse:collapse">
+        <thead>
+          <tr style="text-align:left;border-bottom:1px solid #eee">
+            <th style="padding:8px">Fecha</th>
+            <th style="padding:8px">Habitación</th>
+            <th style="padding:8px">Titular</th>
+            <th style="padding:8px">Entrada</th>
+            <th style="padding:8px">Salida</th>
+            <th style="padding:8px">Huésp.</th>
+            <th style="padding:8px">Total</th>
+            <th style="padding:8px">Pago</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in reservas %}
+          <tr style="border-bottom:1px solid #f2f2f2">
+            <td style="padding:8px">{{ r.created_at|date:"Y-m-d H:i" }}</td>
+            <td style="padding:8px">{{ r.room.name }}</td>
+            <td style="padding:8px">{{ r.holder_name }}</td>
+            <td style="padding:8px">{{ r.check_in }}</td>
+            <td style="padding:8px">{{ r.check_out }}</td>
+            <td style="padding:8px">{{ r.guests }}</td>
+            <td style="padding:8px">${{ r.total }}</td>
+            <td style="padding:8px">{{ r.payment_status }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>No hay reservas registradas.</p>
+    {% endif %}
+  </div>
+
+  <div style="margin-top:14px;display:flex;gap:8px">
+    <a class="btn btn--ghost" href="{% url 'admin:index' %}">Ir a Django Admin</a>
+    <a class="btn btn--ghost" href="{% url 'logout' %}">Salir</a>
+  </div>
+</div>
+{% endblock %}

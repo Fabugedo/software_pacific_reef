@@ -1,8 +1,17 @@
 {% extends "base.html" %}
-{% block title %}{{ res.payment_status == 'paid'|yesno:"Pago exitoso,Reserva ingresada" }} — Hotel Pacific Reef{% endblock %}
+
+{% block title %}
+{% if res.payment_status == 'paid' %}
+Pago exitoso
+{% else %}
+Reserva ingresada
+{% endif %} — Hotel Pacific Reef
+{% endblock %}
+
 {% block content %}
 <div class="container" style="padding:36px 0">
   <div class="card" style="background:#fff;padding:22px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.12)">
+
     {% if res.payment_status == "paid" %}
       <h2>¡Pago realizado con éxito!</h2>
       <p>Tu reserva quedó <b>confirmada</b>. Te esperamos 👋</p>
@@ -14,7 +23,7 @@
       </p>
     {% endif %}
 
-    <ul style="list-style:none;padding:0">
+    <ul style="list-style:none;padding:0;margin:12px 0;color:#444">
       <li>Habitación: <b>{{ res.room.name }}</b></li>
       <li>Entrada: <b>{{ res.check_in }}</b></li>
       <li>Salida: <b>{{ res.check_out }}</b></li>
@@ -28,6 +37,7 @@
     {% else %}
       <a class="btn btn--ghost" href="{% url 'home' %}" style="margin-top:12px">Volver al inicio</a>
     {% endif %}
+
   </div>
 </div>
 {% endblock %}

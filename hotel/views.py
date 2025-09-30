@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.http import HttpResponseBadRequest
 from .models import Room, Reservation, RoomImage
 from .forms import SearchForm, ReservationForm, CheckoutForm, PaymentForm
+from django.contrib.auth.decorators import user_passes_test
 
 def _parse_dates(request):
     ci = request.GET.get("check_in")
@@ -149,3 +150,11 @@ def payment(request, res_id):
     return render(request, "hotel/payment.html", {
         "res": res, "nights": nights, "total": total, "form": form
     })
+def is_staff_user(user):
+    return user.is_authenticated and user.is_staff
+
+@user_passes_test(is_staff_user)
+def staff_dashboard(request):
+
+    reservas = Reservation.objects.select_related('room').order_by('-created_at')[:50]
+    return render(request, 'hotel/staff_dashboard.html', {'reservas': reservas})

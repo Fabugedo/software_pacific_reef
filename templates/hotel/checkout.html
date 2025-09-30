@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}Registro de reserva — {{ room.name }}{% endblock %}
-{% block content %}
 
+{% block content %}
 <div class="container" style="padding:28px 0">
   <h2 style="margin-bottom:16px">Registro de la reserva</h2>
 
@@ -13,9 +13,10 @@
   {% endif %}
 
   <div class="checkout-grid">
-    <!-- Panel de fechas + datos del titular -->
+    <!-- Columna izquierda: Fechas + Datos del titular -->
     <div class="card glass">
       <h3 class="card__title">Fechas y titular</h3>
+
       <form method="post" class="form" style="margin-top:10px">
         {% csrf_token %}
         <div class="field">
@@ -33,6 +34,7 @@
 
         <div class="card" style="grid-column:1/-1;background:#fff;padding:18px;border-radius:12px">
           <h3 class="card__title">Datos del titular</h3>
+
           <div class="field" style="margin-top:8px">
             <span class="label">Nombre completo</span>
             {{ form.holder_name }}
@@ -51,19 +53,31 @@
       </form>
     </div>
 
-    <!-- Panel de resumen -->
+    <!-- Columna derecha: Resumen -->
     <div class="card" style="background:#fff;padding:18px;border-radius:12px">
-      {% with img=room.images.first %}
-        {% if img and img.src %}
-          <img src="{{ img.src }}" alt="" style="width:100%;height:210px;object-fit:cover;border-radius:10px;margin-bottom:10px">
+      {# Imagen de la habitación #}
+      {% with img=room.roomimage_set.first %}
+        {% if img %}
+          {% if img.image %}
+            <img src="{{ img.image.url }}" alt="{{ room.name }}"
+                 style="width:100%;height:210px;object-fit:cover;border-radius:10px;margin-bottom:10px">
+          {% elif img.image_url %}
+            <img src="{{ img.image_url }}" alt="{{ room.name }}"
+                 style="width:100%;height:210px;object-fit:cover;border-radius:10px;margin-bottom:10px">
+          {% else %}
+            <div style="height:210px;background:#eee;border-radius:10px;margin-bottom:10px"></div>
+          {% endif %}
         {% else %}
-          {# Fallback local por categoría (igual que en catálogo) #}
+          {# Fallback local por categoría (igual que catálogo) #}
           {% if room.category|lower == "presidencial" %}
-            <img src="{% static 'images/vip.jpg' %}" alt="" style="width:100%;height:210px;object-fit:cover;border-radius:10px;margin-bottom:10px">
+            <img src="{% static 'images/vip.jpg' %}" alt="{{ room.name }}"
+                 style="width:100%;height:210px;object-fit:cover;border-radius:10px;margin-bottom:10px">
           {% elif room.category|lower == "ejecutiva" %}
-            <img src="{% static 'images/eje.jpg' %}" alt="" style="width:100%;height:210px;object-fit:cover;border-radius:10px;margin-bottom:10px">
+            <img src="{% static 'images/eje.jpg' %}" alt="{{ room.name }}"
+                 style="width:100%;height:210px;object-fit:cover;border-radius:10px;margin-bottom:10px">
           {% elif room.category|lower == "turista" %}
-            <img src="{% static 'images/eco.png' %}" alt="" style="width:100%;height:210px;object-fit:cover;border-radius:10px;margin-bottom:10px">
+            <img src="{% static 'images/eco.png' %}" alt="{{ room.name }}"
+                 style="width:100%;height:210px;object-fit:cover;border-radius:10px;margin-bottom:10px">
           {% else %}
             <div style="height:210px;background:#eee;border-radius:10px;margin-bottom:10px"></div>
           {% endif %}
@@ -85,5 +99,4 @@
     </div>
   </div>
 </div>
-
 {% endblock %}
