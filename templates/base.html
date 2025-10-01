@@ -1,31 +1,69 @@
+{% load static %}
 <!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8">
   <title>{% block title %}Hotel Pacific Reef{% endblock %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/styles.css">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  {% block extra_head %}{% endblock %}
 </head>
 <body>
-  <header class="topbar">
-  <div class="topbar__inner container">
-    <div class="brand">Hotel Pacific Reef</div>
-    <nav class="nav">
-      <a href="{% url 'home' %}" class="nav__link">Home</a>
-      <a href="#" class="nav__link">Catálogo</a>
-      <a href="#" class="nav__link">Registro huésped</a>
-    </nav>
-  </div>
-</header>
 
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <a class="brand" href="{% url 'home' %}">Hotel Pacific Reef</a>
+
+      <nav class="nav">
+        <a class="nav__link" href="{% url 'home' %}">Home</a>
+        <a class="nav__link" href="{% url 'catalog' %}">Catálogo</a>
+
+        {# Enlaces sólo si es staff #}
+        {% if user.is_authenticated and user.is_staff %}
+          <a class="nav__link" href="{% url 'staff_dashboard' %}">Gestión</a>
+          {# opcional: acceso al admin nativo de Django #}
+          {# <a class="nav__link" href="{% url 'admin:index' %}">Admin</a> #}
+        {% endif %}
+
+        {# Login / Logout #}
+        {% if user.is_authenticated %}
+          <form method="post" action="{% url 'logout' %}" style="display:inline">
+            {% csrf_token %}
+            <button type="submit" class="nav__link" style="border:0;background:none;cursor:pointer">
+              Salir
+            </button>
+          </form>
+        {% else %}
+          <a class="nav__link" href="{% url 'login' %}">Ingresar</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
 
   <main>
+    {# Mensajes flash de Django (éxito/error) #}
+    {% if messages %}
+      <div class="container" style="padding:12px 0">
+        {% for m in messages %}
+          <div style="
+            background:#fff;border:1px solid #e5e5e5;border-left:4px solid
+            {% if m.tags == 'error' %}#b00020{% elif m.tags == 'success' %}#2e7d32{% else %}#c9a66b{% endif %};
+            border-radius:8px;padding:10px 12px;margin-bottom:8px">
+            {{ m }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
     {% block content %}{% endblock %}
   </main>
 
-  <footer class="footer">© 2025 Hotel Pacific Reef</footer>
+  <footer class="footer">
+    <div class="container">
+      © 2025 Hotel Pacific Reef
+    </div>
+  </footer>
+
 </body>
 </html>

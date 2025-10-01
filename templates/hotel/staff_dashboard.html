@@ -40,9 +40,14 @@
     {% endif %}
   </div>
 
-  <div style="margin-top:14px;display:flex;gap:8px">
-    <a class="btn btn--ghost" href="{% url 'admin:index' %}">Ir a Django Admin</a>
-    <a class="btn btn--ghost" href="{% url 'logout' %}">Salir</a>
-  </div>
+  <div style="display:flex; gap:12px; margin-top:18px">
+  <a class="btn btn--ghost" href="/admin/">Ir a Django Admin</a>
+
+  <form method="post" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button class="btn btn--primary">Salir</button>
+  </form>
+</div>
+
 </div>
 {% endblock %}
