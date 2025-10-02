@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load humanize %}
 
 {% block title %}
 {% if res.payment_status == 'paid' %}
@@ -28,7 +29,10 @@ Reserva ingresada
       <li>Entrada: <b>{{ res.check_in }}</b></li>
       <li>Salida: <b>{{ res.check_out }}</b></li>
       <li>Huéspedes: <b>{{ res.guests }}</b></li>
-      <li>Total: <b>${{ res.total_amount }}</b></li>
+      <li>Total: <b>${{ res.total_amount|intcomma }}</b></li>
+      <li>Anticipo (30%): <b>${{ res.deposit_30|intcomma }}</b></li>
+
+
       <li>Estado: <b>{{ res.get_payment_status_display }}</b></li>
     </ul>
 

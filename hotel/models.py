@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from decimal import Decimal
 
 class Room(models.Model):
     name = models.CharField(max_length=120)
@@ -58,3 +59,11 @@ class Reservation(models.Model):
     def __str__(self):
         return f"Reserva {self.room.name} {self.check_in}→{self.check_out}"
 
+    @property
+    def nights(self):
+        return max((self.check_out - self.check_in).days, 0)
+
+    @property
+    def deposit_30(self):
+
+        return (Decimal('0.30') * self.total_amount).quantize(Decimal('1'))

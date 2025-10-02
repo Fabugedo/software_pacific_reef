@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}Registro de reserva — {{ room.name }}{% endblock %}
+{% load humanize %}
 
 {% block content %}
 <div class="container" style="padding:28px 0">
@@ -90,8 +91,10 @@
         <li>Salida: <b>{{ check_out|default:"—" }}</b></li>
         <li>Huéspedes: <b>{{ guests|default:"—" }}</b></li>
         <li>Noches: <b>{{ nights }}</b></li>
-        <li>Precio por noche: <b>${{ room.price_per_night }}</b></li>
-        <li>Total estimado: <b>${{ total }}</b></li>
+        <li>Huéspedes: <b>{{ guests }}</b> <span style="color:#777">(máx. {{ room.capacity }})</span></li>
+        <li>Precio por noche: <b>${{ room.price_per_night|intcomma }}</b></li>
+        <li>Total estimado: <b>${{ total|floatformat:0|intcomma }}</b></li>
+
       </ul>
       <p style="font-size:12px;color:#777;margin:8px 0 0">
         * En el MVP se confirma la reserva; la simulación de pago la agregamos enseguida.

@@ -17,20 +17,18 @@
 
       <nav class="nav">
         <a class="nav__link" href="{% url 'home' %}">Home</a>
-        <a class="nav__link" href="{% url 'catalog' %}">Catálogo</a>
 
-        {# Enlaces sólo si es staff #}
+
+        {# Enlace visible sólo para staff #}
         {% if user.is_authenticated and user.is_staff %}
           <a class="nav__link" href="{% url 'staff_dashboard' %}">Gestión</a>
-          {# opcional: acceso al admin nativo de Django #}
-          {# <a class="nav__link" href="{% url 'admin:index' %}">Admin</a> #}
         {% endif %}
 
         {# Login / Logout #}
         {% if user.is_authenticated %}
           <form method="post" action="{% url 'logout' %}" style="display:inline">
             {% csrf_token %}
-            <button type="submit" class="nav__link" style="border:0;background:none;cursor:pointer">
+            <button type="submit" class="nav__link">
               Salir
             </button>
           </form>
@@ -42,7 +40,7 @@
   </header>
 
   <main>
-    {# Mensajes flash de Django (éxito/error) #}
+    {# Mensajes flash (success/error/info) #}
     {% if messages %}
       <div class="container" style="padding:12px 0">
         {% for m in messages %}
