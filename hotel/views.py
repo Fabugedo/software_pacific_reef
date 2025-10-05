@@ -87,7 +87,7 @@ def room_detail(request, room_id):
         guests=guests,
         nights=nights,
         total=total,
-        form=ReservationForm(),   # si mantienes un mini-form
+        form=ReservationForm(),  
     )
     return render(request, "hotel/detail.html", ctx)
 
@@ -121,8 +121,8 @@ def reserve(request, room_id):
         guests=guests,
         holder_name=form.cleaned_data["holder_name"],
         holder_email=form.cleaned_data["holder_email"],
-        total_amount=total,                # <- nombre consistente
-        # payment_status por default = 'pending'
+        total_amount=total,               
+        
     )
     return redirect("confirmation", res_id=res.id)
 
@@ -171,8 +171,8 @@ def checkout(request, room_id):
                     guests=guests,
                     holder_name=form.cleaned_data["holder_name"],
                     holder_email=form.cleaned_data["holder_email"],
-                    total_amount=total,   # <- consistente
-                    # payment_status default 'pending'
+                    total_amount=total,  
+                   
                 )
                 return redirect("confirmation", res_id=res.id)
         else:
@@ -208,7 +208,7 @@ def payment(request, res_id):
     if request.method == "POST":
         form = PaymentForm(request.POST)
         if form.is_valid():
-            # Demo: marcamos como pagado
+           
             res.payment_status = "paid"
             res.save()
             return redirect("confirmation", res_id=res.id)
